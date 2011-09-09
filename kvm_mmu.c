@@ -1145,6 +1145,8 @@ mmu_sync_children(struct kvm_vcpu *vcpu, struct kvm_mmu_page *parent)
 	struct mmu_page_path parents;
 	struct kvm_mmu_pages pages;
 
+	ASSERT(mutex_owned(&vcpu->kvm->mmu_lock));
+
 	kvm_mmu_pages_init(parent, &parents, &pages);
 	while (mmu_unsync_walk(parent, &pages, vcpu->kvm)) {
 		int protected = 0;
@@ -1159,9 +1161,7 @@ mmu_sync_children(struct kvm_vcpu *vcpu, struct kvm_mmu_page *parent)
 			kvm_sync_page(vcpu, sp);
 			mmu_pages_clear_parents(&parents);
 		}
-		mutex_enter(&vcpu->kvm->mmu_lock);
 		kvm_mmu_pages_init(parent, &parents, &pages);
-		mutex_exit(&vcpu->kvm->mmu_lock);
 	}
 }
 
