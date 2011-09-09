@@ -1458,6 +1458,7 @@ kvm_mmu_unprotect_page(struct kvm *kvm, gfn_t gfn)
 		nsp = list_next(bucket, sp);
 
 		if (sp->gfn == gfn && !sp->role.direct) {
+			struct kvm_mmu_page *nsp = list_next(bucket, sp);
 			r = 1;
 			if (kvm_mmu_zap_page(kvm, sp))
 				nsp = list_head(bucket);
