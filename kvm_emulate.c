@@ -1881,11 +1881,7 @@ emulator_io_permited(struct x86_emulate_ctxt *ctxt,
 int
 emulate_invlpg(struct kvm_vcpu *vcpu, gva_t address)
 {
-#ifdef XXX
 	kvm_mmu_invlpg(vcpu, address);
-#else
-	XXX_KVM_PROBE;
-#endif
 	return (X86EMUL_CONTINUE);
 }
 
