@@ -1821,7 +1821,7 @@ kvm_attach(dev_info_t *dip, ddi_attach_cmd_t cmd)
 	}
 
 	mutex_init(&kvm_lock, NULL, MUTEX_DRIVER, 0);
-	if (kvm_svm_init() != DDI_SUCCESS) {
+	if (vmx_init() != DDI_SUCCESS) {
 		ddi_soft_state_fini(&kvm_state);
 		ddi_remove_minor_node(dip, NULL);
 		mutex_destroy(&kvm_lock);
@@ -1835,7 +1835,7 @@ kvm_attach(dev_info_t *dip, ddi_attach_cmd_t cmd)
 		ddi_remove_minor_node(dip, NULL);
 		mutex_destroy(&kvm_lock);
 		mutex_destroy(&cpus_hardware_enabled_mp);
-		kvm_svm_fini();
+		vmx_fini();
 		return (DDI_FAILURE);
 	}
 
@@ -1874,7 +1874,7 @@ kvm_detach(dev_info_t *dip, ddi_detach_cmd_t cmd)
 	kvm_arch_exit();
 	kmem_free(bad_page_kma, PAGESIZE);
 
-	kvm_svm_fini();
+	vmx_fini();
 	mmu_destroy_caches();
 	mutex_destroy(&cpus_hardware_enabled_mp);
 	mutex_destroy(&kvm_lock);
@@ -2794,7 +2794,7 @@ static struct dev_ops kvm_ops = {
 
 static struct modldrv modldrv = {
 	&mod_driverops,
-	"kvm driver v0.1",
+	"kvm driver v0.1 FIX-PREEPT-VMX",
 	&kvm_ops
 };
 
