@@ -1711,6 +1711,8 @@ kvm_io_bus_unregister_dev(struct kvm *kvm,
 	return (r);
 }
 
+struct kmem_cache *kvm_random_page_thing;
+
 int
 kvm_init(void *opaque)
 {
@@ -1740,7 +1742,7 @@ kvm_init(void *opaque)
 out_free_1:
 	kvm_arch_hardware_unsetup();
 out_free:
-	kmem_free(bad_page_kma, PAGESIZE);
+	kmem_cache_free(kvm_random_page_thing, bad_page_kma);
 out:
 	kvm_arch_exit();
 out_fail:
